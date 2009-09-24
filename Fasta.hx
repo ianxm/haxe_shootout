@@ -6,11 +6,21 @@
 */
 class Fasta
 {
-  private static var rnd : FastaRandom;
+  private var rnd : Float;
 
-  public static function main()
+  private var aluChar : String;
+
+  private var iubChar : String;
+  private var iubProb : Array<Float>;
+
+  private var homosapiensChar : String;
+  private var homosapiensProb : Array<Float>;
+
+  public function new()
   {
-    var alu = 'GGCCGGGCGCGGTGGCTCACGCCTGTAATCCCAGCACTTTGG'
+    rnd = 42;
+
+    aluChar = 'GGCCGGGCGCGGTGGCTCACGCCTGTAATCCCAGCACTTTGG'
       + 'GAGGCCGAGGCGGGCGGATCACCTGAGGTCAGGAGTTCGAGA'
       + 'CCAGCCTGGCCAACATGGTGAAACCCCGTCTCTACTAAAAAT'
       + 'ACAAAAATTAGCCGGGCGTGGTGGCGCGCGCCTGTAATCCCA'
@@ -18,17 +28,24 @@ class Fasta
       + 'AGGCGGAGGTTGCAGTGAGCCGAGATCGCGCCACTGCACTCC'
       + 'AGCCTGGGCGACAGAGCGAGACTCCGTCTCAAAAA';
 
-    var iubChar = 'acgtBDHKMNRSVWY';
-    var iubProb = [0.27, 0.12, 0.12, 0.27, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02];
+    iubChar = 'acgtBDHKMNRSVWY';
+    iubProb = [0.27, 0.12, 0.12, 0.27, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02];
 
-    var homosapiensChar = 'acgt';
-    var homosapiensProb = [0.3029549426680, 0.1979883004921, 0.1975473066391, 0.3015094502008];
+    homosapiensChar = 'acgt';
+    homosapiensProb = [0.3029549426680, 0.1979883004921, 0.1975473066391, 0.3015094502008];
+  }
 
+  public static function main()
+  {
     var nn = Std.parseInt(neko.Sys.args()[0]);
-    rnd = new FastaRandom();
+    var fasta = new Fasta();
+    fasta.run(nn);
+  }
 
+  public function run(nn)
+  {
     neko.Lib.println('>ONE Homo sapiens alu');
-    repeatFasta(alu, nn*2);
+    repeatFasta(aluChar, nn*2);
 
     neko.Lib.println('>TWO IUB ambiguity codes');
     randomFasta(iubChar, iubProb, nn*3);
@@ -37,7 +54,7 @@ class Fasta
     randomFasta(homosapiensChar, homosapiensProb, nn*5);
   }
 
-  public static function repeatFasta(src:String, nn:Int)
+  public function repeatFasta(src:String, nn:Int)
   {
     var width = 60;
     var rr = src.length;
@@ -53,7 +70,18 @@ class Fasta
       neko.Lib.println(ss.substr(-(nn%width)));
   }
 
-  public static function makeCumulative(tableProb:Array<Float>)
+  public function genRandom()
+  {
+    var lim = 1;
+    var ia = 3877;
+    var ic = 29573;
+    var im = 139968;
+
+    rnd = (rnd * ia + ic) % im;
+    return lim * rnd / im;
+  }
+
+  public function makeCumulative(tableProb:Array<Float>)
   {
     var probList = new List<Float>();
     var prob = 0.0;
@@ -65,24 +93,24 @@ class Fasta
     return probList;
   }
 
-  public static function randomFasta(tableChar, tableProb, nn)
+  public function randomFasta(tableChar, tableProb, nn)
   {
     var width = 60;
     var probList = makeCumulative(tableProb);
     for( ii in 0...Math.floor(nn/width) )
     {
       for( jj in 0...width )
-	neko.Lib.print(tableChar.charAt(bisect(probList, rnd.genRandom())));
+	neko.Lib.print(tableChar.charAt(bisect(probList, genRandom())));
       neko.Lib.println('');
     }
     for( jj in 0...nn%width )
-      neko.Lib.print(tableChar.charAt(bisect(probList, rnd.genRandom())));
+      neko.Lib.print(tableChar.charAt(bisect(probList, genRandom())));
     if( nn%width != 0 )
       neko.Lib.println('');
   }
 
   // replace this with binary search
-  public static function bisect(list:List<Float>, item:Float)
+  public function bisect(list:List<Float>, item:Float)
   {
     var ret=0;
     var iter = list.iterator();
@@ -96,17 +124,3 @@ class Fasta
     return -1;
   }
 }
-
-/*
-def randomFasta(table, n):
-    width = 60
-    r = xrange(width)
-    gR = Random.next
-    bb = bisect.bisect
-    jn = ''.join
-    probs, chars = makeCumulative(table)
-    for j in xrange(n // width):
-        print jn([chars[bb(probs, gR())] for i in r])
-    if n % width:
-        print jn([chars[bb(probs, gR())] for i in xrange(n % width)])
-*/
