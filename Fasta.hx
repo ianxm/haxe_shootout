@@ -35,13 +35,6 @@ class Fasta
     homosapiensProb = [0.3029549426680, 0.1979883004921, 0.1975473066391, 0.3015094502008];
   }
 
-  public static function main()
-  {
-    var nn = Std.parseInt(neko.Sys.args()[0]);
-    var fasta = new Fasta();
-    fasta.run(nn);
-  }
-
   public function run(nn)
   {
     neko.Lib.println('>ONE Homo sapiens alu');
@@ -70,29 +63,6 @@ class Fasta
       neko.Lib.println(ss.substr(-(nn%width)));
   }
 
-  public function genRandom()
-  {
-    var lim = 1;
-    var ia = 3877;
-    var ic = 29573;
-    var im = 139968;
-
-    rnd = (rnd * ia + ic) % im;
-    return lim * rnd / im;
-  }
-
-  public function makeCumulative(tableProb:Array<Float>)
-  {
-    var probList = new List<Float>();
-    var prob = 0.0;
-    for( ii in 0...tableProb.length)
-    {
-      prob += tableProb[ii];
-      probList.add(prob);
-    }
-    return probList;
-  }
-
   public function randomFasta(tableChar, tableProb, nn)
   {
     var width = 60;
@@ -109,8 +79,31 @@ class Fasta
       neko.Lib.println('');
   }
 
+  private function genRandom()
+  {
+    var lim = 1;
+    var ia = 3877;
+    var ic = 29573;
+    var im = 139968;
+
+    rnd = (rnd * ia + ic) % im;
+    return lim * rnd / im;
+  }
+
+  private function makeCumulative(tableProb:Array<Float>)
+  {
+    var probList = new List<Float>();
+    var prob = 0.0;
+    for( ii in 0...tableProb.length)
+    {
+      prob += tableProb[ii];
+      probList.add(prob);
+    }
+    return probList;
+  }
+
   // replace this with binary search
-  public function bisect(list:List<Float>, item:Float)
+  private function bisect(list:List<Float>, item:Float)
   {
     var ret=0;
     var iter = list.iterator();
@@ -122,5 +115,12 @@ class Fasta
 	ret++;
     }
     return -1;
+  }
+
+  public static function main()
+  {
+    var nn = Std.parseInt(neko.Sys.args()[0]);
+    var fasta = new Fasta();
+    fasta.run(nn);
   }
 }
