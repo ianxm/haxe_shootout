@@ -67,14 +67,12 @@ class Fasta
   {
     var width = 60;
     var probList = makeCumulative(tableProb);
-    for( ii in 0...Math.floor(nn/width) )
+    for( ii in 0...nn )
     {
-      for( jj in 0...width )
-	neko.Lib.print(tableChar.charAt(bisect(probList, genRandom())));
-      neko.Lib.println('');
-    }
-    for( jj in 0...nn%width )
       neko.Lib.print(tableChar.charAt(bisect(probList, genRandom())));
+      if( (ii+1)%width == 0 )
+	neko.Lib.println('');
+    }
     if( nn%width != 0 )
       neko.Lib.println('');
   }
