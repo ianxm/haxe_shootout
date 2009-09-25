@@ -1,5 +1,5 @@
-h2. Haxe Benchmark Programs
-
+Haxe Benchmark Programs
+=======================
 This is a collection of benchmark programs used by the "Computer
 Language Benchmarks Game" (http://shootout.alioth.debian.org)
 
