@@ -1,8 +1,8 @@
 /*
- The Computer Language Benchmarks Game
- http://shootout.alioth.debian.org/
+  The Computer Language Benchmarks Game
+  http://shootout.alioth.debian.org/
 
- contributed by Ian Martins
+  contributed by Ian Martins
 */
 class Fasta
 {
@@ -67,14 +67,18 @@ class Fasta
   {
     var width = 60;
     var probList = makeCumulative(tableProb);
+    var buf = new StringBuf();
     for( ii in 0...nn )
     {
-      neko.Lib.print(tableChar.charAt(bisect(probList, genRandom())));
+      buf.add(tableChar.charAt(bisect(probList, genRandom())));
       if( (ii+1)%width == 0 )
-	neko.Lib.println('');
+      {
+	neko.Lib.println(buf.toString());
+	buf = new StringBuf();
+      }
     }
     if( nn%width != 0 )
-      neko.Lib.println('');
+      neko.Lib.println(buf.toString());
   }
 
   private function genRandom()

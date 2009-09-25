@@ -14,6 +14,7 @@ class ThreadRing
     var nThreads = 503;
     for( tt in 0...nThreads )
     {
+      trace('creating thread ' + tt); // limited to 380 on linux?
       var newThread = Thread.create(tRun);
       newThread.sendMessage(Thread.current());
       newThread.sendMessage(tt+1);

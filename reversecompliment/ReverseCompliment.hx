@@ -43,14 +43,18 @@ class ReverseCompliment
     var str = seq.join('');
     var ii=str.length-1;
     var jj=0;
+    var buf = new StringBuf();
     while (ii>=0)
     {
-      neko.Lib.print(table.get(str.charAt(ii)));
+      buf.add(table.get(str.charAt(ii)));
       jj++; ii--;
       if( jj%60 == 0 )
-	neko.Lib.println('');
+      {
+	neko.Lib.println(buf.toString());
+	buf = new StringBuf();
+      }
     }
     if( str.length%60 != 0 )
-      neko.Lib.println('');
+      neko.Lib.println(buf.toString());
   }
 }
