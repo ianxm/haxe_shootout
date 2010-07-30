@@ -1,0 +1,3 @@
+-neko binarytrees.n
+-main BinaryTrees
+-cmd neko binarytrees 10
